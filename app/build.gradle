@@ -1,0 +1,100 @@
+repositories {
+    mavenCentral()
+    maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap") }
+    maven { url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers") }
+}
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+//apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 31
+    //buildToolsVersion "26.0.3"
+
+    defaultConfig {
+        applicationId "com.kodomo.androidhttpserver"
+        minSdkVersion 21
+        targetSdkVersion 31
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    packagingOptions {
+        pickFirst 'META-INF/INDEX.LIST'
+        pickFirst 'META-INF/io.netty.versions.properties'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+ext {
+    ktor_version = '2.0.0'
+    //ktor_version = '1.6.8'
+    kotlin_version = '1.6.20'
+    conscrypt_version = '2.5.2'
+    timber_version = '5.0.1'
+    slf4j_timber_version = '3.1'
+
+    //https://mvnrepository.com/artifact/io.ktor/ktor-gson
+    if(ktor_version == '2.0.0')
+    {
+        ktor = [ // for 2.0.0
+            "io.ktor:ktor-server-core:$ktor_version",
+            "io.ktor:ktor-server-netty:$ktor_version",
+
+            "io.ktor:ktor-server-html-builder:$ktor_version",
+            "io.ktor:ktor-server-content-negotiation:$ktor_version",
+            "io.ktor:ktor-serialization-gson:$ktor_version",
+            "io.ktor:ktor-network-tls-certificates:$ktor_version",
+            "io.ktor:ktor-server-call-logging:$ktor_version",
+
+            "io.ktor:ktor-server-freemarker:$ktor_version",
+            "io.ktor:ktor-server-pebble:$ktor_version",
+            "io.ktor:ktor-server-mustache:$ktor_version"
+
+
+        ]
+    }else{
+
+        ktor = [ // for 1.6.8
+                 "io.ktor:ktor-core:$ktor_version",
+                 "io.ktor:ktor-netty:$ktor_version",
+                 "io.ktor:ktor-freemarker:$ktor_version",
+                 "io.ktor:ktor-html-builder:$ktor_version",
+                 "io.ktor:ktor-gson:$ktor_version"
+        ]
+    }
+
+    conscrypt = "org.conscrypt:conscrypt-android:$conscrypt_version"
+
+    logging_tools = [
+            "com.jakewharton.timber:timber:$timber_version",
+            "com.arcao:slf4j-timber:$slf4j_timber_version"
+    ]
+}
+
+dependencies {
+
+    implementation ktor
+    implementation conscrypt
+    implementation logging_tools
+
+    implementation 'com.google.zxing:core:3.5.0'
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation "androidx.preference:preference-ktx:1.2.0"
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    debugImplementation  'com.facebook.stetho:stetho:1.6.0'
+}
+
